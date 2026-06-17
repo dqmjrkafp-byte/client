@@ -6,149 +6,200 @@
     <style>
         :root { 
             --bg: rgba(15, 15, 20, 0.98); 
+            --titlebar: #0d0d11;
             --accent: #ffffff; 
             --glass: rgba(255, 255, 255, 0.04); 
         }
-        body { 
-            margin: 0; 
-            font-family: 'Inter', sans-serif; 
-            background: transparent; 
-            color: white; 
-            overflow: hidden; 
-            user-select: none;
-        }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: transparent; color: white; overflow: hidden; user-select: none; }
         
-        .app { 
-            display: flex; 
+        /* ОБЕРТКА ВСЕГО ОКНА (Рамка и скругления) */
+        .window-wrapper { 
             width: 998px; 
             height: 598px; 
             background: var(--bg); 
-            border-radius: 16px; 
+            border-radius: 12px; 
             border: 1px solid rgba(255,255,255,0.08); 
-            position: relative;
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; /* Обрезает углы, чтобы они были круглыми */
         }
-        
-        .drag-bar { position: absolute; top: 0; left: 0; width: 100%; height: 50px; z-index: 100; cursor: move; }
-        .window-controls { position: absolute; top: 15px; right: 20px; z-index: 101; }
-        .control { cursor: pointer; padding: 5px 10px; font-size: 16px; opacity: 0.4; transition: opacity 0.2s; } 
-        .control:hover { opacity: 1; }
 
-        .sidebar { 
-            width: 40%; 
-            background: url('https://w.forfun.com/fetch/f2/f2a6f7902d1d575c3702f232491a6797.jpeg') center/cover; 
-            position: relative; 
-            border-radius: 15px 0 0 15px; 
+        /* === НОВАЯ ВЕРХНЯЯ ПАНЕЛЬ (TITLEBAR) === */
+        .titlebar {
+            display: flex;
+            width: 100%;
+            height: 35px;
+            background: var(--titlebar);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            align-items: stretch;
         }
-        .sidebar-overlay { 
-            position: absolute; inset: 0; 
-            background: linear-gradient(to bottom, rgba(0,0,0,0.2), #000000); 
-            padding: 40px; display: flex; flex-direction: column; justify-content: flex-end; 
-        }
-        
-        .main { 
-            width: 60%; padding: 60px; display: flex; flex-direction: column; position: relative; justify-content: center;
-        }
-        .tab-content { display: none; } 
-        .active { display: flex; flex-direction: column; }
-        
-        input { 
-            background: var(--glass); border: 1px solid rgba(255,255,255,0.08); padding: 14px; 
-            border-radius: 10px; color: white; margin-bottom: 15px; width: 100%; outline: none; 
-            box-sizing: border-box; font-size: 14px;
-        }
-        input:focus { border-color: rgba(255,255,255,0.3); }
 
-        .btn { 
-            background: #ffffff; color: #000000; padding: 14px; border: none; border-radius: 10px; 
-            cursor: pointer; font-weight: 600; text-align: center; text-transform: uppercase;
-            letter-spacing: 0.5px; font-size: 13px; transition: background 0.2s, opacity 0.2s;
+        /* Зона за которую тянуть окно */
+        .drag-region {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            padding-left: 15px;
+            cursor: default;
         }
-        .btn:hover { background: #e5e5e5; }
-        .btn:disabled { opacity: 0.2; cursor: not-allowed; background: #fff; }
+
+        .title-text {
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.7);
+            letter-spacing: 0.5px;
+        }
+
+        /* Кнопки управления окном */
+        .window-controls {
+            display: flex;
+        }
+
+        .control-btn {
+            width: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+
+        .control-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+        .control-btn.close:hover { background: #e81123; color: #fff; } /* Классический красный при закрытии */
+
+
+        /* ОСНОВНОЙ КОНТЕНТ (под Titlebar) */
+        .app-content {
+            display: flex;
+            flex-grow: 1;
+            height: calc(100% - 35px);
+        }
+
+        .sidebar { width: 40%; background: url('https://w.forfun.com/fetch/f2/f2a6f7902d1d575c3702f232491a6797.jpeg') center/cover; position: relative; }
+        .sidebar-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.2), #000000); padding: 40px; display: flex; flex-direction: column; justify-content: flex-end; }
         
+        .main { width: 60%; padding: 50px 60px; display: flex; flex-direction: column; position: relative; justify-content: center; }
+        
+        /* АНИМАЦИИ И ЭЛЕМЕНТЫ */
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .tab-content { display: none; opacity: 0; } 
+        .active { display: flex; flex-direction: column; animation: fadeSlideUp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        
+        input { background: var(--glass); border: 1px solid rgba(255,255,255,0.08); padding: 14px; border-radius: 10px; color: white; margin-bottom: 15px; width: 100%; outline: none; box-sizing: border-box; font-size: 14px; transition: border-color 0.3s; }
+        input:focus { border-color: rgba(255,255,255,0.4); }
+
+        .btn { background: #ffffff; color: #000000; padding: 14px; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; font-size: 13px; transition: all 0.3s ease; }
+        .btn:hover { background: #d0d0d0; transform: translateY(-1px); }
+        .btn:active { transform: translateY(1px); }
+        .btn:disabled { opacity: 0.2; cursor: not-allowed; transform: none; }
+        
+        .btn-outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+        .btn-outline:hover { background: rgba(255,255,255,0.05); }
+
         .nav { display: flex; gap: 25px; margin-bottom: 35px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px; }
-        .nav-item { cursor: pointer; opacity: 0.4; font-size: 14px; transition: opacity 0.2s; font-weight: 600;} 
+        .nav-item { cursor: pointer; opacity: 0.4; font-size: 14px; transition: opacity 0.3s; font-weight: 600;} 
         .nav-item.active-nav { opacity: 1; border-bottom: 2px solid #ffffff; padding-bottom: 10px; }
         
-        #maintenance-screen { 
-            position: absolute; inset: 0; background: #09090b; z-index: 1000; display: none; 
-            flex-direction: column; align-items: center; justify-content: center; text-align: center; border-radius: 16px;
-        }
+        #maintenance-screen { position: absolute; inset: 0; background: #09090b; z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div class="drag-bar" onmousedown="pywebview.api.start_drag()" onmouseup="pywebview.api.stop_drag()"></div>
-    
-    <div class="window-controls">
-        <span class="control" onclick="pywebview.api.minimize()">—</span>
-        <span class="control" onclick="pywebview.api.close()">✕</span>
-    </div>
-
-    <div id="maintenance-screen">
-        <h1 style="font-weight: 600; letter-spacing: -1px;">Технические работы</h1>
-        <p style="opacity: 0.5; font-size: 14px;">Клиент временно недоступен. Зайдите позже.</p>
-    </div>
-
-    <div class="app">
-        <div class="sidebar">
-            <div class="sidebar-overlay">
-                <h2 style="margin:0; font-size: 28px; font-weight: 600; letter-spacing: -0.5px;">OlegaVisuals</h2>
-                <p style="opacity:0.5; font-size: 12px; margin-top: 5px;">Design & Tech Client Loader</p>
-            </div>
-        </div>
+    <div class="window-wrapper">
         
-        <div class="main">
-            <div id="auth-tab" class="tab-content active">
-                <h1 style="margin-top:0; margin-bottom: 5px; font-weight: 600;">Вход</h1>
-                <p id="auth-error" style="color: #ff4d4d; font-size: 12px; margin-bottom: 15px; height: 15px;"></p>
-                <input type="text" id="email" placeholder="Email">
-                <input type="password" id="pass" placeholder="Пароль">
-                <button class="btn" onclick="login()">Войти →</button>
-                <p style="font-size: 12px; margin-top: 25px; opacity: 0.5; text-align: center;">Нет аккаунта? <span style="color:#fff; cursor:pointer; font-weight: 600;" onclick="showTab('reg-tab')">Создать</span></p>
-            </div>
-
-            <div id="reg-tab" class="tab-content">
-                <h1 style="margin-top:0; margin-bottom: 5px; font-weight: 600;">Регистрация</h1>
-                <p id="reg-error" style="color: #ff4d4d; font-size: 12px; margin-bottom: 10px; height: 15px;"></p>
-                <input type="text" id="reg-username" placeholder="Придумайте Ник (Логин)">
-                <input type="text" id="reg-email" placeholder="Email">
-                <input type="password" id="reg-pass" placeholder="Пароль (от 6 символов)">
-                <button class="btn" onclick="register()">Зарегистрироваться</button>
-                <p style="font-size: 12px; margin-top: 25px; opacity: 0.5; text-align: center;">Уже есть аккаунт? <span style="color:#fff; cursor:pointer; font-weight: 600;" onclick="showTab('auth-tab')">Войти</span></p>
-            </div>
-
-            <div id="launch-tab" class="tab-content">
-                <div class="nav">
-                    <span class="nav-item active-nav" onclick="showTab('launch-tab')">Запуск</span>
-                    <span class="nav-item" onclick="showTab('profile-tab')">Профиль</span>
-                    <span class="nav-item" onclick="showTab('settings-tab')">Настройки</span>
-                </div>
-                <div style="background: var(--glass); padding: 25px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.02)">
-                    <h3 id="sub-name" style="margin-top:0; font-weight: 600;">Visuals 1.21.4</h3>
-                    <p id="sub-desc" style="font-size: 13px; opacity: 0.5; line-height: 1.5; margin-bottom: 20px;"></p>
-                    <button class="btn" id="launchBtn" style="width: 100%;" onclick="launchGame()">Запустить клиент</button>
-                </div>
-                <p id="status-msg" style="margin-top: 20px; font-size: 13px; opacity: 0.6; text-align: center; height: 15px;"></p>
-            </div>
-
-            <div id="profile-tab" class="tab-content">
-                <div class="nav">
-                    <span class="nav-item" onclick="showTab('launch-tab')">Запуск</span>
-                    <span class="nav-item active-nav">Профиль</span>
-                </div>
-                <h2 id="user-display" style="margin-top:0;">User</h2>
-                <p style="opacity: 0.8;">Текущий тариф: <span id="user-sub" style="font-weight: 600;">Free</span></p>
-                <button class="btn" style="background: rgba(255,255,255,0.1); color: #fff; margin-top: 20px;" onclick="logout()">Выйти из системы</button>
+        <div class="titlebar">
+            <div class="drag-region" onmousedown="pywebview.api.start_drag()" onmouseup="pywebview.api.stop_drag()">
+                <span class="title-text">OlegaVisuals Loader</span>
             </div>
             
-            <div id="settings-tab" class="tab-content">
-                <div class="nav"><span class="nav-item" onclick="showTab('launch-tab')">← Назад к запуску</span></div>
-                <h3 style="margin-top:0;">Настройки выделения памяти</h3>
-                <label style="font-size: 12px; opacity: 0.5; margin-bottom: 8px; display: block;">Выделите RAM (Гигабайты):</label>
-                <input type="number" id="ram-input" value="4" min="2" max="32">
+            <div class="window-controls">
+                <div class="control-btn" onclick="pywebview.api.minimize()">—</div>
+                <div class="control-btn close" onclick="pywebview.api.close()">✕</div>
             </div>
         </div>
+
+        <div id="maintenance-screen">
+            <h1 style="font-weight: 600; letter-spacing: -1px;">Технические работы</h1>
+            <p style="opacity: 0.5; font-size: 14px;">Сервер недоступен. Возвращайтесь позже.</p>
+        </div>
+
+        <div class="app-content">
+            <div class="sidebar">
+                <div class="sidebar-overlay">
+                    <h2 style="margin:0; font-size: 28px; font-weight: 600; letter-spacing: -0.5px;">OlegaVisuals</h2>
+                    <p style="opacity:0.5; font-size: 12px; margin-top: 5px;">Client Loader</p>
+                </div>
+            </div>
+            
+            <div class="main">
+                <div id="auth-tab" class="tab-content active">
+                    <h1 style="margin-top:0; margin-bottom: 5px; font-weight: 600;">Вход</h1>
+                    <p id="auth-error" style="color: #ff4d4d; font-size: 12px; margin-bottom: 15px; height: 15px;"></p>
+                    <input type="text" id="email" placeholder="Email">
+                    <input type="password" id="pass" placeholder="Пароль">
+                    <button class="btn" onclick="login()">Войти</button>
+                    <p style="font-size: 12px; margin-top: 25px; opacity: 0.5; text-align: center;">Нет аккаунта? <span style="color:#fff; cursor:pointer; font-weight: 600;" onclick="showTab('reg-tab')">Создать</span></p>
+                </div>
+
+                <div id="reg-tab" class="tab-content">
+                    <h1 style="margin-top:0; margin-bottom: 5px; font-weight: 600;">Регистрация</h1>
+                    <p id="reg-error" style="color: #ff4d4d; font-size: 12px; margin-bottom: 10px; height: 15px;"></p>
+                    <input type="text" id="reg-username" placeholder="Придумайте Ник">
+                    <input type="text" id="reg-email" placeholder="Email">
+                    <input type="password" id="reg-pass" placeholder="Пароль">
+                    <button class="btn" onclick="register()">Зарегистрироваться</button>
+                    <p style="font-size: 12px; margin-top: 25px; opacity: 0.5; text-align: center;">Уже есть аккаунт? <span style="color:#fff; cursor:pointer; font-weight: 600;" onclick="showTab('auth-tab')">Войти</span></p>
+                </div>
+
+                <div id="launch-tab" class="tab-content">
+                    <div class="nav">
+                        <span class="nav-item active-nav" onclick="showTab('launch-tab')">Запуск</span>
+                        <span class="nav-item" onclick="showTab('profile-tab')">Профиль и Настройки</span>
+                    </div>
+                    <div style="background: var(--glass); padding: 25px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.02)">
+                        <h3 id="sub-name" style="margin-top:0; font-weight: 600;">Visuals 1.21.4</h3>
+                        <p id="sub-desc" style="font-size: 13px; opacity: 0.5; line-height: 1.5; margin-bottom: 20px;"></p>
+                        
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn" id="launchBtn" style="flex: 2;" onclick="launchGame()">Запуск</button>
+                            <button class="btn btn-outline" id="buyBtn" style="flex: 1;" onclick="openBuyLink()">Купить</button>
+                        </div>
+                    </div>
+                    <p id="status-msg" style="margin-top: 20px; font-size: 13px; opacity: 0.6; text-align: center; height: 15px;"></p>
+                </div>
+
+                <div id="profile-tab" class="tab-content">
+                    <div class="nav">
+                        <span class="nav-item" onclick="showTab('launch-tab')">Запуск</span>
+                        <span class="nav-item active-nav">Профиль и Настройки</span>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <div>
+                            <h2 id="user-display" style="margin:0; font-weight: 600;">User</h2>
+                            <p style="opacity: 0.6; font-size: 13px; margin-top: 5px;">Статус: <span id="user-sub" style="color: #fff; font-weight: bold;">Free</span></p>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--glass); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                        <label style="font-size: 12px; opacity: 0.6; display: block; margin-bottom: 8px;">Выделение памяти (RAM):</label>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <input type="number" id="ram-input" value="4" min="2" max="32" style="margin: 0; width: 80px; text-align: center;">
+                            <span style="font-size: 14px; opacity: 0.5;">ГБ</span>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-outline" style="width: 100%; border-color: rgba(255,77,77,0.3); color: #ff4d4d;" onclick="logout()">Выйти из аккаунта</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -172,15 +223,10 @@
         let currentUserData = null;
         let updateLink = "";
 
-        // Проверка техработ
         db.ref('global').on('value', (snap) => {
             const data = snap.val();
             if(data) {
-                if (data.texadmin === true) {
-                    document.getElementById('maintenance-screen').style.display = 'flex';
-                } else {
-                    document.getElementById('maintenance-screen').style.display = 'none';
-                }
+                document.getElementById('maintenance-screen').style.display = data.texadmin ? 'flex' : 'none';
                 updateLink = data.Update || "";
             }
         });
@@ -188,79 +234,38 @@
         function showTab(id) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            
-            // Очищаем ошибки при переключении
             document.getElementById('auth-error').innerText = "";
             document.getElementById('reg-error').innerText = "";
         }
 
-        // --- ЛОГИКА ВХОДА ---
         async function login() {
             const email = document.getElementById('email').value.trim();
             const pass = document.getElementById('pass').value;
-            const errorEl = document.getElementById('auth-error');
-            errorEl.innerText = "";
-            
-            if(!email || !pass) return errorEl.innerText = "Заполните все поля";
-
-            try {
-                await auth.signInWithEmailAndPassword(email, pass);
-            } catch (e) {
-                errorEl.innerText = "Неверный логин или пароль.";
-            }
+            try { await auth.signInWithEmailAndPassword(email, pass); } 
+            catch (e) { document.getElementById('auth-error').innerText = "Ошибка входа."; }
         }
 
-        // --- ЛОГИКА РЕГИСТРАЦИИ (НОВАЯ) ---
         async function register() {
             const username = document.getElementById('reg-username').value.trim();
             const email = document.getElementById('reg-email').value.trim();
             const pass = document.getElementById('reg-pass').value;
-            const errorEl = document.getElementById('reg-error');
+            const err = document.getElementById('reg-error');
             
-            errorEl.innerText = "";
-            
-            if(username.length < 3) return errorEl.innerText = "Ник должен быть от 3 символов";
-            if(pass.length < 6) return errorEl.innerText = "Пароль должен быть от 6 символов";
-            if(!email) return errorEl.innerText = "Введите Email";
+            if(username.length < 3) return err.innerText = "Ник от 3 символов";
+            if(pass.length < 6) return err.innerText = "Пароль от 6 символов";
 
             try {
-                // 1. Создаем пользователя в Firebase
-                const userCredential = await auth.createUserWithEmailAndPassword(email, pass);
-                const user = userCredential.user;
-                
-                // 2. Сразу записываем его ник и статус в базу данных
-                await db.ref('users/' + user.uid).set({
-                    username: username,
-                    sub: 'Free' // Дефолтная подписка
-                });
-                
-                // Firebase автоматически войдет в аккаунт, и onAuthStateChanged переключит нас на вкладку запуска
-            } catch (e) {
-                if(e.code === 'auth/email-already-in-use') {
-                    errorEl.innerText = "Этот Email уже зарегистрирован!";
-                } else if (e.code === 'auth/invalid-email') {
-                    errorEl.innerText = "Неверный формат Email!";
-                } else {
-                    errorEl.innerText = "Ошибка: " + e.message;
-                }
-            }
+                const user = (await auth.createUserWithEmailAndPassword(email, pass)).user;
+                await db.ref('users/' + user.uid).set({ username: username, sub: 'Free' });
+            } catch (e) { err.innerText = "Ошибка: " + e.message; }
         }
 
-        async function logout() { 
-            await auth.signOut(); 
-            location.reload(); 
-        }
+        async function logout() { await auth.signOut(); location.reload(); }
 
-        // --- ОТСЛЕЖИВАНИЕ СОСТОЯНИЯ (ВХОД/ВЫХОД) ---
         auth.onAuthStateChanged(user => {
             if (user) {
                 db.ref('users/' + user.uid).on('value', snap => {
                     currentUserData = snap.val();
-                    if (!currentUserData) {
-                        // Резервная защита: если в базе нет записи, создаем её (на случай бага)
-                        currentUserData = { sub: 'Free', username: user.email.split('@')[0] };
-                        db.ref('users/' + user.uid).set(currentUserData);
-                    }
                     updateUI();
                     showTab('launch-tab');
                 });
@@ -270,18 +275,19 @@
         });
 
         function updateUI() {
+            if(!currentUserData) return;
             const sub = currentUserData.sub || 'Free';
             document.getElementById('user-display').innerText = currentUserData.username;
             document.getElementById('user-sub').innerText = sub;
             
             if (sub === 'Free') {
-                document.getElementById('sub-desc').innerText = "У вас нет активной подписки. Доступные планы: 30d, 90d, LifeTime. Приобрести можно на visuals.ttdq.pro";
+                document.getElementById('sub-desc').innerText = "Нет активной подписки. Доступ: Закрыт.";
                 document.getElementById('launchBtn').disabled = true;
                 document.getElementById('launchBtn').innerText = "Нет подписки";
             } else {
-                document.getElementById('sub-desc').innerText = "Ваш тарифный план [" + sub + "] активен. Все файлы проверены и готовы к работе.";
+                document.getElementById('sub-desc').innerText = "Тариф [" + sub + "] активен. Файлы готовы.";
                 document.getElementById('launchBtn').disabled = false;
-                document.getElementById('launchBtn').innerText = "Запустить клиент";
+                document.getElementById('launchBtn').innerText = "Запустить";
             }
         }
 
@@ -291,12 +297,13 @@
             pywebview.api.download_and_launch(updateLink, currentUserData.username, ram);
         }
 
-        function updateStatus(msg) {
-            document.getElementById('status-msg').innerText = msg;
+        function openBuyLink() {
+            window.open("https://visuals.ttdq.pro", "_blank");
         }
 
+        function updateStatus(msg) { document.getElementById('status-msg').innerText = msg; }
         function launchFinished() {
-            updateStatus("Игра успешно запущена!");
+            updateStatus("Игра запущена!");
             document.getElementById('launchBtn').disabled = false;
         }
     </script>
