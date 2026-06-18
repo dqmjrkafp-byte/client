@@ -2,6 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <title>OlegaVisuals Client</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root { 
@@ -126,15 +127,15 @@
                 
                 <div id="nav-sidebar-menu" class="nav-menu" style="display: none;">
                     <div class="nav-item active-nav" onclick="showTab('launch-tab', this)">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path></svg>
                         Запуск
                     </div>
                     <div class="nav-item" onclick="showTab('profile-tab', this)">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                         Профиль
                     </div>
                     <div class="nav-item" onclick="showTab('settings-tab', this)">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"></path><circle cx="12" cy="12" r="3"></circle></svg>
                         Настройки
                     </div>
                 </div>
@@ -148,9 +149,9 @@
             <div class="main">
                 <div class="main-overlay">
                     <div id="auth-tab" class="tab-content active">
-                        <h1 style="margin-top:0; margin-bottom: 5px;">Вход в систему</h1>
+                        <h1 style="margin-top:0; margin-bottom: 5px;">Вход</h1>
                         <p id="auth-error" style="color: #ff4d4d; font-size: 12px; margin-bottom: 15px; height: 15px;"></p>
-                        <input type="text" id="email" placeholder="Email">
+                        <input type="text" id="email" placeholder="Email или логин">
                         <input type="password" id="pass" placeholder="Пароль">
                         <button class="btn" onclick="login()">Войти</button>
                         <p style="font-size: 12px; margin-top: 25px; opacity: 0.5; text-align: center;">Нет аккаунта? <span style="color:#fff; cursor:pointer; font-weight: 600;" onclick="showTab('reg-tab', null)">Создать</span></p>
@@ -200,10 +201,9 @@
                             </div>
                         </div>
 
-                        <!-- ПОЛЕ ДЛЯ ПУТИ К JAVA -->
                         <div style="background: var(--glass); padding: 25px; border-radius: 12px; margin-bottom: 20px;">
                             <label style="font-size: 13px; font-weight: 500; display: block; margin-bottom: 12px;">Путь к Java 21</label>
-                            <p style="font-size: 12px; opacity: 0.5; margin-bottom: 15px;">Укажите путь к java.exe, если версия 1.21.4 не запускается со стандартной Java.</p>
+                            <p style="font-size: 12px; opacity: 0.5; margin-bottom: 15px;">Укажите путь к java.exe, если версия не запускается со стандартной Java.</p>
                             <div style="display: flex; gap: 10px; align-items: center;">
                                 <input type="text" id="java-input" placeholder="Оставьте 'java' для системной" value="java" style="margin: 0; flex-grow: 1; font-family: monospace; font-size: 12px;">
                                 <button class="btn btn-outline" style="padding: 13px 20px; width: auto; font-size: 12px;" onclick="browseJava()">Обзор</button>
@@ -216,186 +216,183 @@
         </div>
     </div>
 
-    <!-- FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDeUzPDzlNOOjltElDOlPkYTwJVTiki_6s",
-    authDomain: "secretme1.firebaseapp.com",
-    databaseURL: "https://secretme1-default-rtdb.firebaseio.com",
-    projectId: "secretme1",
-    storageBucket: "secretme1.firebasestorage.app",
-    messagingSenderId: "8350375438",
-    appId: "1:8350375438:web:6b1af092ebcd2023bf265f"
-};
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.database();
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDeUzPDzlNOOjltElDOlPkYTwJVTiki_6s",
+            authDomain: "secretme1.firebaseapp.com",
+            databaseURL: "https://secretme1-default-rtdb.firebaseio.com",
+            projectId: "secretme1",
+            storageBucket: "secretme1.firebasestorage.app",
+            messagingSenderId: "8350375438",
+            appId: "1:8350375438:web:6b1af092ebcd2023bf265f"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
 
-let currentUserData = null;
-let updateLink = "";
+        let currentUserData = null;
+        let updateLink = "";
 
-db.ref('global').on('value', (snap) => {
-    const data = snap.val();
-    if(data) {
-        document.getElementById('maintenance-screen').style.display = data.texadmin ? 'flex' : 'none';
-        updateLink = data.Update || "";
-    }
-});
-
-function showTab(id, navElement) {
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    if (navElement) {
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
-        navElement.classList.add('active-nav');
-    }
-    document.getElementById('auth-error').innerText = "";
-    document.getElementById('reg-error').innerText = "";
-}
-
-async function login() {
-    const email = document.getElementById('email').value.trim();
-    const pass = document.getElementById('pass').value;
-    try { await auth.signInWithEmailAndPassword(email, pass); } 
-    catch (e) { document.getElementById('auth-error').innerText = "Ошибка входа."; }
-}
-
-async function register() {
-    const username = document.getElementById('reg-username').value.trim();
-    const email = document.getElementById('reg-email').value.trim();
-    const pass = document.getElementById('reg-pass').value;
-    const err = document.getElementById('reg-error');
-    
-    if(username.length < 3) return err.innerText = "Ник от 3 символов";
-    if(pass.length < 6) return err.innerText = "Пароль от 6 символов";
-
-    try {
-        const user = (await auth.createUserWithEmailAndPassword(email, pass)).user;
-        // По умолчанию подписка Free, время окончания 0
-        await db.ref('users/' + user.uid).set({ username: username, sub: 'Free', expiry: 0 });
-    } catch (e) { err.innerText = "Ошибка: " + e.message; }
-}
-
-async function logout() { await auth.signOut(); location.reload(); }
-
-auth.onAuthStateChanged(user => {
-    if (user) {
-        document.getElementById('nav-sidebar-menu').style.display = 'flex';
-        document.getElementById('sidebar-user-info').style.display = 'block';
-        
-        db.ref('users/' + user.uid).on('value', snap => {
-            currentUserData = snap.val();
-            checkSubscription(user.uid); // Проверяем на истечение
-            updateUI();
-            
-            if (document.getElementById('auth-tab').classList.contains('active') || document.getElementById('reg-tab').classList.contains('active')) {
-                showTab('launch-tab', document.querySelector('.nav-item')); 
+        db.ref('global').on('value', (snap) => {
+            const data = snap.val();
+            if(data) {
+                document.getElementById('maintenance-screen').style.display = data.texadmin ? 'flex' : 'none';
+                updateLink = data.Update || "";
             }
         });
-    } else {
-        document.getElementById('nav-sidebar-menu').style.display = 'none';
-        document.getElementById('sidebar-user-info').style.display = 'none';
-        showTab('auth-tab', null);
-    }
-});
 
-// --- СИСТЕМА ИСТЕЧЕНИЯ ПОДПИСКИ ---
-function checkSubscription(uid) {
-    if (!currentUserData) return;
-    let sub = currentUserData.sub || 'Free';
-    let expiry = currentUserData.expiry || 0;
-
-    if (sub !== 'Free' && expiry !== 'LifeTime' && expiry !== 0) {
-        const now = new Date().getTime();
-        if (now > expiry) {
-            // Время вышло! Сбрасываем в Free
-            db.ref('users/' + uid).update({ sub: 'Free', expiry: 0 });
-            currentUserData.sub = 'Free';
-            currentUserData.expiry = 0;
+        function showTab(id, navElement) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            
+            if (navElement) {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
+                navElement.classList.add('active-nav');
+            }
+            
+            document.getElementById('auth-error').innerText = "";
+            document.getElementById('reg-error').innerText = "";
         }
-    }
-}
 
-function updateUI() {
-    if(!currentUserData) return;
-    let sub = currentUserData.sub || 'Free';
-    let expiry = currentUserData.expiry || 0;
-    
-    let subText = sub;
-    
-    // Считаем дни
-    if (sub !== 'Free' && expiry !== 'LifeTime' && expiry !== 0) {
-        const now = new Date().getTime();
-        const daysLeft = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
-        subText = `${sub} (Осталось: ${daysLeft} дн.)`;
-    } else if (expiry === 'LifeTime') {
-        subText = `${sub} (Навсегда)`;
-    }
-    
-    document.getElementById('sidebar-username').innerText = currentUserData.username;
-    document.getElementById('sidebar-sub').innerText = subText;
-    document.getElementById('user-display').innerText = currentUserData.username;
-    document.getElementById('user-sub').innerText = subText;
-    
-    if (sub === 'Free') {
-        document.getElementById('sub-desc').innerText = "У вас нет активной подписки. Запуск невозможен.";
-        document.getElementById('launchBtn').disabled = true;
-    } else {
-        document.getElementById('sub-desc').innerText = "Ваш тариф активен. Файлы готовы к запуску.";
-        document.getElementById('launchBtn').disabled = false;
-    }
-}
+        async function login() {
+            const email = document.getElementById('email').value.trim();
+            const pass = document.getElementById('pass').value;
+            try { await auth.signInWithEmailAndPassword(email, pass); } 
+            catch (e) { document.getElementById('auth-error').innerText = "Ошибка входа."; }
+        }
 
-async function browseJava() {
-    const path = await pywebview.api.select_java_path();
-    if (path) {
-        document.getElementById('java-input').value = path;
-    }
-}
+        async function register() {
+            const username = document.getElementById('reg-username').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const pass = document.getElementById('reg-pass').value;
+            const err = document.getElementById('reg-error');
+            
+            if(username.length < 3) return err.innerText = "Ник от 3 символов";
+            if(pass.length < 6) return err.innerText = "Пароль от 6 символов";
 
-function launchGame() {
-    const ram = document.getElementById('ram-input').value;
-    const javaPath = document.getElementById('java-input').value; 
-    
-    const overlay = document.getElementById('launch-overlay');
-    overlay.style.display = 'flex';
-    setTimeout(() => overlay.style.opacity = '1', 10); 
-    
-    document.getElementById('progress-bar').style.width = '10%';
-    document.getElementById('loader-status').innerText = 'Инициализация...';
+            try {
+                const user = (await auth.createUserWithEmailAndPassword(email, pass)).user;
+                await db.ref('users/' + user.uid).set({ username: username, sub: 'Free', expiry: 0 });
+            } catch (e) { err.innerText = "Ошибка: " + e.message; }
+        }
 
-    pywebview.api.download_and_launch(updateLink, currentUserData.username, ram, javaPath);
-}
+        async function logout() { await auth.signOut(); location.reload(); }
 
-function updateStatus(msg) { 
-    document.getElementById('loader-status').innerText = msg;
-    const bar = document.getElementById('progress-bar');
-    if (msg.includes('Скачивание')) bar.style.width = '30%';
-    if (msg.includes('Распаковка')) bar.style.width = '60%';
-    if (msg.includes('Запуск')) bar.style.width = '90%';
-    if (msg.includes('Ошибка') || msg.includes('Краш')) {
-        bar.style.background = '#ff4d4d';
-    }
-}
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                document.getElementById('nav-sidebar-menu').style.display = 'flex';
+                document.getElementById('sidebar-user-info').style.display = 'block';
+                
+                db.ref('users/' + user.uid).on('value', snap => {
+                    currentUserData = snap.val();
+                    checkSubscription(user.uid);
+                    updateUI();
+                    
+                    if (document.getElementById('auth-tab').classList.contains('active') || document.getElementById('reg-tab').classList.contains('active')) {
+                        showTab('launch-tab', document.querySelector('.nav-item')); 
+                    }
+                });
+            } else {
+                document.getElementById('nav-sidebar-menu').style.display = 'none';
+                document.getElementById('sidebar-user-info').style.display = 'none';
+                showTab('auth-tab', null);
+            }
+        });
 
-function launchFinished() {
-    document.getElementById('progress-bar').style.width = '100%';
-    document.getElementById('loader-status').innerText = 'Minecraft успешно запущен!';
-    setTimeout(closeLoader, 2000);
-}
+        function checkSubscription(uid) {
+            if (!currentUserData) return;
+            let sub = currentUserData.sub || 'Free';
+            let expiry = currentUserData.expiry || 0;
 
-function closeLoader() {
-    const overlay = document.getElementById('launch-overlay');
-    overlay.style.opacity = '0';
-    setTimeout(() => {
-        overlay.style.display = 'none';
-        document.getElementById('progress-bar').style.background = '#ffffff'; 
-    }, 400);
-}
+            if (sub !== 'Free' && expiry !== 'LifeTime' && expiry !== 0) {
+                const now = new Date().getTime();
+                if (now > expiry) {
+                    db.ref('users/' + uid).update({ sub: 'Free', expiry: 0 });
+                    currentUserData.sub = 'Free';
+                    currentUserData.expiry = 0;
+                }
+            }
+        }
 
-function openBuyLink() { window.open("https://visuals.ttdq.pro", "_blank"); }
+        function updateUI() {
+            if(!currentUserData) return;
+            let sub = currentUserData.sub || 'Free';
+            let expiry = currentUserData.expiry || 0;
+            let subText = sub;
+            
+            if (sub !== 'Free' && expiry !== 'LifeTime' && expiry !== 0) {
+                const now = new Date().getTime();
+                const daysLeft = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+                subText = `${sub} (Осталось: ${daysLeft} дн.)`;
+            } else if (expiry === 'LifeTime') {
+                subText = `${sub} (Навсегда)`;
+            }
+            
+            document.getElementById('sidebar-username').innerText = currentUserData.username;
+            document.getElementById('sidebar-sub').innerText = subText;
+            document.getElementById('user-display').innerText = currentUserData.username;
+            document.getElementById('user-sub').innerText = subText;
+            
+            if (sub === 'Free') {
+                document.getElementById('sub-desc').innerText = "У вас нет активной подписки. Доступ к скачиванию закрыт.";
+                document.getElementById('launchBtn').disabled = true;
+            } else {
+                document.getElementById('sub-desc').innerText = "Ваш тариф активен. Файлы готовы к запуску.";
+                document.getElementById('launchBtn').disabled = false;
+            }
+        }
+
+        async function browseJava() {
+            const path = await pywebview.api.select_java_path();
+            if (path) { document.getElementById('java-input').value = path; }
+        }
+
+        // ПЕРЕДАЕМ 4 ПАРАМЕТРА ДЛЯ ПРЕДОТВРАЩЕНИЯ ОШИБКИ В PYTHON
+        function launchGame() {
+            const ram = document.getElementById('ram-input').value;
+            const javaPath = document.getElementById('java-input').value; 
+            
+            const overlay = document.getElementById('launch-overlay');
+            overlay.style.display = 'flex';
+            setTimeout(() => overlay.style.opacity = '1', 10); 
+            
+            document.getElementById('progress-bar').style.width = '10%';
+            document.getElementById('loader-status').innerText = 'Подготовка...';
+
+            pywebview.api.download_and_launch(updateLink, currentUserData.username, ram, javaPath);
+        }
+
+        function updateStatus(msg) { 
+            document.getElementById('loader-status').innerText = msg;
+            const bar = document.getElementById('progress-bar');
+            if (msg.includes('Скачивание')) bar.style.width = '40%';
+            if (msg.includes('Java')) bar.style.width = '70%';
+            if (msg.includes('процесса')) bar.style.width = '90%';
+            if (msg.includes('Ошибка') || msg.includes('Краш')) {
+                bar.style.background = '#ff4d4d';
+            }
+        }
+
+        function launchFinished() {
+            document.getElementById('progress-bar').style.width = '100%';
+            document.getElementById('loader-status').innerText = 'Minecraft успешно запущен!';
+            setTimeout(closeLoader, 2000);
+        }
+
+        function closeLoader() {
+            const overlay = document.getElementById('launch-overlay');
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                document.getElementById('progress-bar').style.background = '#ffffff'; 
+            }, 400);
+        }
+
+        function openBuyLink() { window.open("https://visuals.ttdq.pro", "_blank"); }
+    </script>
 </body>
 </html>
