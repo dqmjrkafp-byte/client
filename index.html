@@ -221,156 +221,181 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyDeUzPDzlNOOjltElDOlPkYTwJVTiki_6s",
-            authDomain: "secretme1.firebaseapp.com",
-            databaseURL: "https://secretme1-default-rtdb.firebaseio.com",
-            projectId: "secretme1",
-            storageBucket: "secretme1.firebasestorage.app",
-            messagingSenderId: "8350375438",
-            appId: "1:8350375438:web:6b1af092ebcd2023bf265f"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.database();
+  const firebaseConfig = {
+    apiKey: "AIzaSyDeUzPDzlNOOjltElDOlPkYTwJVTiki_6s",
+    authDomain: "secretme1.firebaseapp.com",
+    databaseURL: "https://secretme1-default-rtdb.firebaseio.com",
+    projectId: "secretme1",
+    storageBucket: "secretme1.firebasestorage.app",
+    messagingSenderId: "8350375438",
+    appId: "1:8350375438:web:6b1af092ebcd2023bf265f"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.database();
 
-        let currentUserData = null;
-        let updateLink = "";
+let currentUserData = null;
+let updateLink = "";
 
-        db.ref('global').on('value', (snap) => {
-            const data = snap.val();
-            if(data) {
-                document.getElementById('maintenance-screen').style.display = data.texadmin ? 'flex' : 'none';
-                updateLink = data.Update || "";
+db.ref('global').on('value', (snap) => {
+    const data = snap.val();
+    if(data) {
+        document.getElementById('maintenance-screen').style.display = data.texadmin ? 'flex' : 'none';
+        updateLink = data.Update || "";
+    }
+});
+
+function showTab(id, navElement) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (navElement) {
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
+        navElement.classList.add('active-nav');
+    }
+    document.getElementById('auth-error').innerText = "";
+    document.getElementById('reg-error').innerText = "";
+}
+
+async function login() {
+    const email = document.getElementById('email').value.trim();
+    const pass = document.getElementById('pass').value;
+    try { await auth.signInWithEmailAndPassword(email, pass); } 
+    catch (e) { document.getElementById('auth-error').innerText = "Ошибка входа."; }
+}
+
+async function register() {
+    const username = document.getElementById('reg-username').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const pass = document.getElementById('reg-pass').value;
+    const err = document.getElementById('reg-error');
+    
+    if(username.length < 3) return err.innerText = "Ник от 3 символов";
+    if(pass.length < 6) return err.innerText = "Пароль от 6 символов";
+
+    try {
+        const user = (await auth.createUserWithEmailAndPassword(email, pass)).user;
+        // По умолчанию подписка Free, время окончания 0
+        await db.ref('users/' + user.uid).set({ username: username, sub: 'Free', expiry: 0 });
+    } catch (e) { err.innerText = "Ошибка: " + e.message; }
+}
+
+async function logout() { await auth.signOut(); location.reload(); }
+
+auth.onAuthStateChanged(user => {
+    if (user) {
+        document.getElementById('nav-sidebar-menu').style.display = 'flex';
+        document.getElementById('sidebar-user-info').style.display = 'block';
+        
+        db.ref('users/' + user.uid).on('value', snap => {
+            currentUserData = snap.val();
+            checkSubscription(user.uid); // Проверяем на истечение
+            updateUI();
+            
+            if (document.getElementById('auth-tab').classList.contains('active') || document.getElementById('reg-tab').classList.contains('active')) {
+                showTab('launch-tab', document.querySelector('.nav-item')); 
             }
         });
+    } else {
+        document.getElementById('nav-sidebar-menu').style.display = 'none';
+        document.getElementById('sidebar-user-info').style.display = 'none';
+        showTab('auth-tab', null);
+    }
+});
 
-        function showTab(id, navElement) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            
-            if (navElement) {
-                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
-                navElement.classList.add('active-nav');
-            }
-            
-            document.getElementById('auth-error').innerText = "";
-            document.getElementById('reg-error').innerText = "";
+// --- СИСТЕМА ИСТЕЧЕНИЯ ПОДПИСКИ ---
+function checkSubscription(uid) {
+    if (!currentUserData) return;
+    let sub = currentUserData.sub || 'Free';
+    let expiry = currentUserData.expiry || 0;
+
+    if (sub !== 'Free' && expiry !== 'LifeTime' && expiry !== 0) {
+        const now = new Date().getTime();
+        if (now > expiry) {
+            // Время вышло! Сбрасываем в Free
+            db.ref('users/' + uid).update({ sub: 'Free', expiry: 0 });
+            currentUserData.sub = 'Free';
+            currentUserData.expiry = 0;
         }
+    }
+}
 
-        async function login() {
-            const email = document.getElementById('email').value.trim();
-            const pass = document.getElementById('pass').value;
-            try { await auth.signInWithEmailAndPassword(email, pass); } 
-            catch (e) { document.getElementById('auth-error').innerText = "Ошибка входа."; }
-        }
+function updateUI() {
+    if(!currentUserData) return;
+    let sub = currentUserData.sub || 'Free';
+    let expiry = currentUserData.expiry || 0;
+    
+    let subText = sub;
+    
+    // Считаем дни
+    if (sub !== 'Free' && expiry !== 'LifeTime' && expiry !== 0) {
+        const now = new Date().getTime();
+        const daysLeft = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+        subText = `${sub} (Осталось: ${daysLeft} дн.)`;
+    } else if (expiry === 'LifeTime') {
+        subText = `${sub} (Навсегда)`;
+    }
+    
+    document.getElementById('sidebar-username').innerText = currentUserData.username;
+    document.getElementById('sidebar-sub').innerText = subText;
+    document.getElementById('user-display').innerText = currentUserData.username;
+    document.getElementById('user-sub').innerText = subText;
+    
+    if (sub === 'Free') {
+        document.getElementById('sub-desc').innerText = "У вас нет активной подписки. Запуск невозможен.";
+        document.getElementById('launchBtn').disabled = true;
+    } else {
+        document.getElementById('sub-desc').innerText = "Ваш тариф активен. Файлы готовы к запуску.";
+        document.getElementById('launchBtn').disabled = false;
+    }
+}
 
-        async function register() {
-            const username = document.getElementById('reg-username').value.trim();
-            const email = document.getElementById('reg-email').value.trim();
-            const pass = document.getElementById('reg-pass').value;
-            const err = document.getElementById('reg-error');
-            
-            if(username.length < 3) return err.innerText = "Ник от 3 символов";
-            if(pass.length < 6) return err.innerText = "Пароль от 6 символов";
+async function browseJava() {
+    const path = await pywebview.api.select_java_path();
+    if (path) {
+        document.getElementById('java-input').value = path;
+    }
+}
 
-            try {
-                const user = (await auth.createUserWithEmailAndPassword(email, pass)).user;
-                await db.ref('users/' + user.uid).set({ username: username, sub: 'Free' });
-            } catch (e) { err.innerText = "Ошибка: " + e.message; }
-        }
+function launchGame() {
+    const ram = document.getElementById('ram-input').value;
+    const javaPath = document.getElementById('java-input').value; 
+    
+    const overlay = document.getElementById('launch-overlay');
+    overlay.style.display = 'flex';
+    setTimeout(() => overlay.style.opacity = '1', 10); 
+    
+    document.getElementById('progress-bar').style.width = '10%';
+    document.getElementById('loader-status').innerText = 'Инициализация...';
 
-        async function logout() { await auth.signOut(); location.reload(); }
+    pywebview.api.download_and_launch(updateLink, currentUserData.username, ram, javaPath);
+}
 
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                document.getElementById('nav-sidebar-menu').style.display = 'flex';
-                document.getElementById('sidebar-user-info').style.display = 'block';
-                
-                db.ref('users/' + user.uid).on('value', snap => {
-                    currentUserData = snap.val();
-                    updateUI();
-                    
-                    if (document.getElementById('auth-tab').classList.contains('active') || document.getElementById('reg-tab').classList.contains('active')) {
-                        showTab('launch-tab', document.querySelector('.nav-item')); 
-                    }
-                });
-            } else {
-                document.getElementById('nav-sidebar-menu').style.display = 'none';
-                document.getElementById('sidebar-user-info').style.display = 'none';
-                showTab('auth-tab', null);
-            }
-        });
+function updateStatus(msg) { 
+    document.getElementById('loader-status').innerText = msg;
+    const bar = document.getElementById('progress-bar');
+    if (msg.includes('Скачивание')) bar.style.width = '30%';
+    if (msg.includes('Распаковка')) bar.style.width = '60%';
+    if (msg.includes('Запуск')) bar.style.width = '90%';
+    if (msg.includes('Ошибка') || msg.includes('Краш')) {
+        bar.style.background = '#ff4d4d';
+    }
+}
 
-        function updateUI() {
-            if(!currentUserData) return;
-            const sub = currentUserData.sub || 'Free';
-            
-            document.getElementById('sidebar-username').innerText = currentUserData.username;
-            document.getElementById('sidebar-sub').innerText = sub;
-            document.getElementById('user-display').innerText = currentUserData.username;
-            document.getElementById('user-sub').innerText = sub;
-            
-            if (sub === 'Free') {
-                document.getElementById('sub-desc').innerText = "У вас нет активной подписки. Доступ к скачиванию закрыт.";
-                document.getElementById('launchBtn').disabled = true;
-            } else {
-                document.getElementById('sub-desc').innerText = "Тариф [" + sub + "] активен. Все файлы проверены и готовы к запуску.";
-                document.getElementById('launchBtn').disabled = false;
-            }
-        }
+function launchFinished() {
+    document.getElementById('progress-bar').style.width = '100%';
+    document.getElementById('loader-status').innerText = 'Minecraft успешно запущен!';
+    setTimeout(closeLoader, 2000);
+}
 
-        async function browseJava() {
-            const path = await pywebview.api.select_java_path();
-            if (path) {
-                document.getElementById('java-input').value = path;
-            }
-        }
+function closeLoader() {
+    const overlay = document.getElementById('launch-overlay');
+    overlay.style.opacity = '0';
+    setTimeout(() => {
+        overlay.style.display = 'none';
+        document.getElementById('progress-bar').style.background = '#ffffff'; 
+    }, 400);
+}
 
-        // --- ВАЖНО: 4 АРГУМЕНТА ДЛЯ PYTHON ---
-        function launchGame() {
-            const ram = document.getElementById('ram-input').value;
-            const javaPath = document.getElementById('java-input').value; // Берем путь к Java
-            
-            const overlay = document.getElementById('launch-overlay');
-            overlay.style.display = 'flex';
-            setTimeout(() => overlay.style.opacity = '1', 10); 
-            
-            document.getElementById('progress-bar').style.width = '10%';
-            document.getElementById('loader-status').innerText = 'Подготовка...';
-
-            // Передаем 4 аргумента, чтобы избежать TypeError
-            pywebview.api.download_and_launch(updateLink, currentUserData.username, ram, javaPath);
-        }
-
-        function updateStatus(msg) { 
-            document.getElementById('loader-status').innerText = msg;
-            const bar = document.getElementById('progress-bar');
-            if (msg.includes('Скачивание')) bar.style.width = '40%';
-            if (msg.includes('Java')) bar.style.width = '70%';
-            if (msg.includes('процесса')) bar.style.width = '90%';
-            if (msg.includes('Ошибка') || msg.includes('Краш')) {
-                bar.style.background = '#ff4d4d';
-            }
-        }
-
-        function launchFinished() {
-            document.getElementById('progress-bar').style.width = '100%';
-            document.getElementById('loader-status').innerText = 'Minecraft успешно запущен!';
-            setTimeout(closeLoader, 2000);
-        }
-
-        function closeLoader() {
-            const overlay = document.getElementById('launch-overlay');
-            overlay.style.opacity = '0';
-            setTimeout(() => {
-                overlay.style.display = 'none';
-                document.getElementById('progress-bar').style.background = '#ffffff'; 
-            }, 400);
-        }
-
-        function openBuyLink() { window.open("https://visuals.ttdq.pro", "_blank"); }
-    </script>
+function openBuyLink() { window.open("https://visuals.ttdq.pro", "_blank"); }
 </body>
 </html>
