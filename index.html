@@ -18,7 +18,6 @@
             border: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; overflow: hidden; position: relative;
         }
 
-        /* === ВЕРХНЯЯ ШТОРКА === */
         .titlebar {
             display: flex; width: 100%; height: 35px; background: var(--titlebar);
             border-bottom: 1px solid rgba(255,255,255,0.05); align-items: stretch; z-index: 200; position: relative;
@@ -33,7 +32,6 @@
         .control-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
         .control-btn.close:hover { background: #e81123; color: #fff; }
 
-        /* === ЭКРАН ЗАГРУЗКИ === */
         .launch-overlay {
             position: absolute; inset: 0; background: rgba(10, 10, 15, 0.85);
             backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
@@ -44,10 +42,8 @@
         .progress-container { width: 100%; height: 4px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; overflow: hidden; }
         .progress-bar-fill { width: 0%; height: 100%; background: #ffffff; border-radius: 10px; transition: width 0.5s ease; box-shadow: 0 0 15px rgba(255, 255, 255, 0.6); }
 
-        /* === ОСНОВНОЙ КОНТЕНТ С БОКОВОЙ ПАНЕЛЬЮ === */
         .app-content { display: flex; flex-grow: 1; height: calc(100% - 35px); position: relative; }
         
-        /* БОКОВАЯ ПАНЕЛЬ НАВИГАЦИИ */
         .sidebar { 
             width: 220px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.05); 
             display: flex; flex-direction: column; z-index: 10;
@@ -68,13 +64,12 @@
 
         .sidebar-footer { margin-top: auto; padding: 20px 25px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; }
 
-        /* ГЛАВНАЯ ЗОНА */
         .main { 
             flex-grow: 1; display: flex; flex-direction: column; position: relative; 
             background: url('https://w.forfun.com/fetch/f2/f2a6f7902d1d575c3702f232491a6797.jpeg') center/cover;
         }
         .main-overlay {
-            position: absolute; inset: 0; background: rgba(10, 10, 13, 0.92); /* Сильное затемнение фона для строгого стиля */
+            position: absolute; inset: 0; background: rgba(10, 10, 13, 0.92);
             display: flex; flex-direction: column; justify-content: center; padding: 50px 70px;
         }
         
@@ -82,7 +77,6 @@
         .tab-content { display: none; opacity: 0; } 
         .active { display: flex; flex-direction: column; animation: fadeSlideUp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         
-        /* ЭЛЕМЕНТЫ УПРАВЛЕНИЯ */
         input { background: var(--glass); border: 1px solid rgba(255,255,255,0.08); padding: 14px; border-radius: 10px; color: white; margin-bottom: 15px; width: 100%; outline: none; box-sizing: border-box; font-size: 14px; transition: 0.3s; }
         input:focus { border-color: rgba(255,255,255,0.4); }
 
@@ -98,7 +92,6 @@
 <body>
 
     <div class="window-wrapper">
-        
         <div class="titlebar">
             <div class="drag-region" onmousedown="pywebview.api.start_drag()">
                 <span class="title-text">OlegaVisuals Loader</span>
@@ -133,15 +126,15 @@
                 
                 <div id="nav-sidebar-menu" class="nav-menu" style="display: none;">
                     <div class="nav-item active-nav" onclick="showTab('launch-tab', this)">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap" aria-hidden="true"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path></svg>
                         Запуск
                     </div>
                     <div class="nav-item" onclick="showTab('profile-tab', this)">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                         Профиль
                     </div>
                     <div class="nav-item" onclick="showTab('settings-tab', this)">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings" aria-hidden="true"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"></path><circle cx="12" cy="12" r="3"></circle></svg>
                         Настройки
                     </div>
                 </div>
@@ -154,7 +147,6 @@
             
             <div class="main">
                 <div class="main-overlay">
-                    
                     <div id="auth-tab" class="tab-content active">
                         <h1 style="margin-top:0; margin-bottom: 5px;">Вход в систему</h1>
                         <p id="auth-error" style="color: #ff4d4d; font-size: 12px; margin-bottom: 15px; height: 15px;"></p>
@@ -199,12 +191,22 @@
 
                     <div id="settings-tab" class="tab-content">
                         <h2 style="margin-top:0; font-size: 24px;">Настройки</h2>
+                        
                         <div style="background: var(--glass); padding: 25px; border-radius: 12px; margin-bottom: 20px;">
                             <label style="font-size: 13px; font-weight: 500; display: block; margin-bottom: 12px;">Выделение памяти (RAM)</label>
-                            <p style="font-size: 12px; opacity: 0.5; margin-bottom: 15px;">Укажите количество оперативной памяти в гигабайтах, которое будет использовать клиент.</p>
                             <div style="display: flex; align-items: center; gap: 15px;">
                                 <input type="number" id="ram-input" value="4" min="2" max="32" style="margin: 0; width: 100px; font-size: 16px;">
                                 <span style="opacity: 0.5; font-size: 14px;">ГБ</span>
+                            </div>
+                        </div>
+
+                        <!-- ПОЛЕ ДЛЯ ПУТИ К JAVA -->
+                        <div style="background: var(--glass); padding: 25px; border-radius: 12px; margin-bottom: 20px;">
+                            <label style="font-size: 13px; font-weight: 500; display: block; margin-bottom: 12px;">Путь к Java 21</label>
+                            <p style="font-size: 12px; opacity: 0.5; margin-bottom: 15px;">Укажите путь к java.exe, если версия 1.21.4 не запускается со стандартной Java.</p>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <input type="text" id="java-input" placeholder="Оставьте 'java' для системной" value="java" style="margin: 0; flex-grow: 1; font-family: monospace; font-size: 12px;">
+                                <button class="btn btn-outline" style="padding: 13px 20px; width: auto; font-size: 12px;" onclick="browseJava()">Обзор</button>
                             </div>
                         </div>
                     </div>
@@ -214,6 +216,7 @@
         </div>
     </div>
 
+    <!-- FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
@@ -289,9 +292,8 @@
                     currentUserData = snap.val();
                     updateUI();
                     
-                    // Переключаем на запуск, если мы находимся на экране авторизации
                     if (document.getElementById('auth-tab').classList.contains('active') || document.getElementById('reg-tab').classList.contains('active')) {
-                        showTab('launch-tab', document.querySelector('.nav-item')); // первая кнопка меню
+                        showTab('launch-tab', document.querySelector('.nav-item')); 
                     }
                 });
             } else {
@@ -305,11 +307,8 @@
             if(!currentUserData) return;
             const sub = currentUserData.sub || 'Free';
             
-            // Обновляем мини-профиль слева
             document.getElementById('sidebar-username').innerText = currentUserData.username;
             document.getElementById('sidebar-sub').innerText = sub;
-
-            // Обновляем основной профиль
             document.getElementById('user-display').innerText = currentUserData.username;
             document.getElementById('user-sub').innerText = sub;
             
@@ -322,8 +321,18 @@
             }
         }
 
+        async function browseJava() {
+            const path = await pywebview.api.select_java_path();
+            if (path) {
+                document.getElementById('java-input').value = path;
+            }
+        }
+
+        // --- ВАЖНО: 4 АРГУМЕНТА ДЛЯ PYTHON ---
         function launchGame() {
             const ram = document.getElementById('ram-input').value;
+            const javaPath = document.getElementById('java-input').value; // Берем путь к Java
+            
             const overlay = document.getElementById('launch-overlay');
             overlay.style.display = 'flex';
             setTimeout(() => overlay.style.opacity = '1', 10); 
@@ -331,7 +340,8 @@
             document.getElementById('progress-bar').style.width = '10%';
             document.getElementById('loader-status').innerText = 'Подготовка...';
 
-            pywebview.api.download_and_launch(updateLink, currentUserData.username, ram);
+            // Передаем 4 аргумента, чтобы избежать TypeError
+            pywebview.api.download_and_launch(updateLink, currentUserData.username, ram, javaPath);
         }
 
         function updateStatus(msg) { 
@@ -340,9 +350,8 @@
             if (msg.includes('Скачивание')) bar.style.width = '40%';
             if (msg.includes('Java')) bar.style.width = '70%';
             if (msg.includes('процесса')) bar.style.width = '90%';
-            if (msg.includes('Ошибка')) {
+            if (msg.includes('Ошибка') || msg.includes('Краш')) {
                 bar.style.background = '#ff4d4d';
-                setTimeout(closeLoader, 3000);
             }
         }
 
